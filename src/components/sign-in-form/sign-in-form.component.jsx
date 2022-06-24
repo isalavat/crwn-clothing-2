@@ -1,11 +1,9 @@
-import { useState, useContext } from "react";
-
+import { useState } from "react";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 
-import { UserContext } from "../../contexts/user.context";
 
-import { signInAuthUserWithEmailAndPassword, signInWithGooglePopup, createUserDocumentFromAuth } from "../../utils/firebase/firebase.utils";
+import { signInAuthUserWithEmailAndPassword, signInWithGooglePopup } from "../../utils/firebase/firebase.utils";
 
 import './sign-in-form.styles.scss';
 
@@ -19,15 +17,12 @@ const SignInForm = () => {
     const [formFields, setFormFields] = useState(defaultFormFields);
     const { email, password } = formFields;
 
-    const { setCurrentUser} = useContext(UserContext);
-
     const resetFormFields = () => {
         setFormFields(defaultFormFields);
     }
 
     const signInWithGoogle = async () => {
-        const { user } = await signInWithGooglePopup();
-        await createUserDocumentFromAuth(user);
+         await signInWithGooglePopup();
     }
 
     const handleSubmit = async (event) => {
@@ -35,7 +30,6 @@ const SignInForm = () => {
 
         try {
             const {user} = await signInAuthUserWithEmailAndPassword(email, password);
-            setCurrentUser(user);
             resetFormFields();
         } catch (error) {
 
@@ -79,7 +73,7 @@ const SignInForm = () => {
                     onChange={handleChange}
                     name="password"
                     value={password} />
-                <div class='buttons-container'>
+                <div className='buttons-container'>
                     <Button type="submit" buttonType='inverted'>Sign In</Button>
                     <Button onClick={signInWithGoogle} buttonType='google'>Google sign in</Button>
                 </div>
